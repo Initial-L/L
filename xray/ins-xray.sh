@@ -70,6 +70,7 @@ date
 echo ""
 domain=$(cat /root/domain)
 sleep 1
+mkdir /backup >> /dev/null 2>&1
 mkdir -p /etc/xray 
 echo -e "[ ${green}INFO${NC} ] Checking... "
 apt install iptables iptables-persistent -y
@@ -115,8 +116,9 @@ touch /var/log/xray/error.log
 touch /var/log/xray/access2.log
 touch /var/log/xray/error2.log
 # / / Ambil Xray Core Version Terbaru
-#bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u www-data --version 1.5.6
+# bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u www-data --version 1.5.6
 bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" - install --beta
+cp /usr/local/bin/xray /backup/xray.official.backup
 curl -s ipinfo.io/city >> /etc/xray/city
 curl -s ipinfo.io/org | cut -d " " -f 2-10 >> /etc/xray/org
 curl -s ipinfo.io/timezone >> /etc/xray/timezone
