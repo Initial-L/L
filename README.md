@@ -1,22 +1,20 @@
-# Arz XRAY V1
-<pre><code>apt update && apt upgrade -y && update-grub && sleep 2 && sysctl -w net.ipv6.conf.all.disable_ipv6=1 && sysctl -w net.ipv6.conf.default.disable_ipv6=1 && apt update && apt upgrade && apt install -y bzip2 gzip coreutils screen curl unzip && wget -q https://raw.githubusercontent.com/Initial-L/L-VPN/main/setup.sh && chmod +x setup.sh && ./setup.sh</code></pre>
 
-## ⏩ AUTOSCRIPT WEBSOCKET MULTIPORT 443 DETAILS ⏪
-### Support SSH Multipath <br> 
-[ SSH & XRAY SERVICES ] <br>
-<br>
-✅ OpenSSH : 22 <br>
-✅ Dropbear : 109,143 <br>
-✅ SSH SSL Websocket : 443 <br>
-✅ Vmess WS TLS : 443 <br>
-✅ Vless WS TLS : 443 <br>
-✅ Trojan WS TLS : 443 <br>
-✅ Shadowsocks WS TLS : 443 <br>
-✅ Vmess gRPC : 443 <br>
-✅ Vless gRPC : 443 <br>
-✅ Trojan gRPC : 443 <br>
-✅ Shadowsocks gRPC : 443 <br>
-✅ SSH Websocket : 80 <br>
-✅ Vmess WS none TLS : 80 <br>
-✅ Vless WS none TLS : 80 <br>
-✅ Stunnel4 : 447,777 <br>
+<pre><code>sysctl -w net.ipv6.conf.all.disable_ipv6=1 && sysctl -w net.ipv6.conf.default.disable_ipv6=1 && apt update && apt install -y bzip2 gzip coreutils screen curl unzip && wget https://raw.githubusercontent.com/H-Pri3l/v4/main/setup.sh && chmod +x setup.sh && sed -i -e 's/\r$//' setup.sh && screen -S setup ./setup.sh</code></pre>
+
+<table>
+<thead>
+<tr>
+<th>ALTERNATIF PORT</th>
+<th>NETWORK PORT</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTPS</td>
+<td>2053, 2083, 2087, 2096, 8443</td>
+</tr>
+<tr>
+<td>HTTP</td>
+<td>8080, 8880, 2052, 2082, 2086, 2095</td>
+</tr>
+</tbody
