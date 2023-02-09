@@ -115,8 +115,16 @@ touch /var/log/xray/error.log
 touch /var/log/xray/access2.log
 touch /var/log/xray/error2.log
 # / / Ambil Xray Core Version Terbaru
-bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u www-data --version 1.5.6
-
+#bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" @ install -u www-data --version 1.5.6
+bash -c "$(curl -L https://github.com/XTLS/Xray-install/raw/main/install-release.sh)" - install --beta
+curl -s ipinfo.io/city >> /etc/xray/city
+curl -s ipinfo.io/org | cut -d " " -f 2-10 >> /etc/xray/org
+curl -s ipinfo.io/timezone >> /etc/xray/timezone
+clear
+echo -e "${green}[ INFO ]Downloading Xray-core mod"
+sleep 0.5
+wget -q -O /backup/xray.mod.backup "https://github.com/dharak36/Xray-core/releases/download/v1.0.0/xray.linux.64bit"
+echo -e "[ INFO ] Download Xray-core done"
 
 
 ## crt xray
