@@ -20,8 +20,8 @@ BURIQ () {
     done
     rm -f  /root/tmp
 }
-# https://raw.githubusercontent.com/Initial-L/WhoIsL/main/Kira 
-MYIP=$(curl -sS ipv4.icanhazip.com)
+# https://digvpn.my.id/licensi//ipmini 
+MYIP=$(curl -sS https://ipinfo.io/ip)
 Name=$(curl -sS https://raw.githubusercontent.com/Initial-L/WhoIsL/main/Kira | grep $MYIP | awk '{print $2}')
 echo $Name > /usr/local/etc/.$Name.ini
 CekOne=$(cat /usr/local/etc/.$Name.ini)
@@ -33,229 +33,442 @@ CekTwo=$(cat /etc/.$Name.ini)
         res="Expired"
     fi
 else
-res="Permission Accepted..."
+res="licensi Accepted..."
 fi
 }
 
-PERMISSION () {
-    MYIP=$(curl -sS ipv4.icanhazip.com)
+licensi () {
+    MYIP=$(curl -sS https://ipinfo.io/ip)
     IZIN=$(curl -sS https://raw.githubusercontent.com/Initial-L/WhoIsL/main/Kira | awk '{print $4}' | grep $MYIP)
     if [ "$MYIP" = "$IZIN" ]; then
     Bloman
     else
-    res="Permission Denied!"
+    res="licensi Denied!"
     fi
     BURIQ
 }
-
+# // Root Checking
+if [ "${EUID}" -ne 0 ]; then
+		echo -e "${EROR} Please Run This Script As Root User !"
+		exit 1
+fi
 clear
+dateFromServer=$(curl -v --insecure --silent https://google.com/ 2>&1 | grep Date | sed -e 's/< Date: //')
+
+# // Root Checking
+if [ "${EUID}" -ne 0 ]; then
+		echo -e "${EROR} Please Run This Script As Root User !"
+		exit 1
+fi
+clear
+# // Exporting Language to UTF-8
+export LANG='en_US.UTF-8'
+export LANGUAGE='en_US.UTF-8'
+
+# // Export Color & Information
+export RED='\033[0;31m'
+export GREEN='\033[0;32m'
+export YELLOW='\033[0;33m'
+export BLUE='\033[0;34m'
+export PURPLE='\033[0;35m'
+export CYAN='\033[0;36m'
+export LIGHT='\033[0;37m'
+export NC='\033[0m'
+BIRed='\033[1;91m'
+red='\e[1;31m'
+bo='\e[1m'
 red='\e[1;31m'
 green='\e[0;32m'
 yell='\e[1;33m'
 tyblue='\e[1;36m'
-NC='\e[0m'
 purple() { echo -e "\\033[35;1m${*}\\033[0m"; }
 tyblue() { echo -e "\\033[36;1m${*}\\033[0m"; }
 yellow() { echo -e "\\033[33;1m${*}\\033[0m"; }
 green() { echo -e "\\033[32;1m${*}\\033[0m"; }
 red() { echo -e "\\033[31;1m${*}\\033[0m"; }
-cd /root
-#System version number
-if [ "${EUID}" -ne 0 ]; then
-		echo "You need to run this script as root"
-		exit 1
-fi
-if [ "$(systemd-detect-virt)" == "openvz" ]; then
-		echo "OpenVZ is not supported"
-		exit 1
-fi
+# // Export Banner Status Information
+export EROR="[${RED} ERROR ${NC}]"
+export INFO="[${YELLOW} INFO ${NC}]"
+export OKEY="[${GREEN} OKEY ${NC}]"
+export PENDING="[${YELLOW} PENDING ${NC}]"
+export SEND="[${YELLOW} SEND ${NC}]"
+export RECEIVE="[${YELLOW} RECEIVE ${NC}]"
 
-localip=$(hostname -I | cut -d\  -f1)
-hst=( `hostname` )
-dart=$(cat /etc/hosts | grep -w `hostname` | awk '{print $2}')
-if [[ "$hst" != "$dart" ]]; then
-echo "$localip $(hostname)" >> /etc/hosts
-fi
-mkdir -p /etc/xray
+# // Export Align
+export BOLD="\e[1m"
+export WARNING="${RED}\e[5m"
+export UNDERLINE="\e[4m"
 
-echo -e "[ ${tyblue}NOTES${NC} ] Welcome To AutoScript...... "
-sleep 2
-echo -e "[ ${yell}NOTES${NC} ] process check your headers......"
-sleep 2
-echo -e "[ ${green}INFO${NC} ] Checking headers"
-sleep 1
-totet=`uname -r`
-REQUIRED_PKG="linux-headers-$totet"
-PKG_OK=$(dpkg-query -W --showformat='${Status}\n' $REQUIRED_PKG|grep "install ok installed")
-echo Checking for $REQUIRED_PKG: $PKG_OK
-if [ "" = "$PKG_OK" ]; then
-  sleep 2
-  echo -e "[ ${yell}WARNING${NC} ] Try to install ...."
-  echo "No $REQUIRED_PKG. Setting up $REQUIRED_PKG."
-  apt-get --yes install $REQUIRED_PKG
-  sleep 1
-  echo ""
-  sleep 1
-  echo -e "[ ${tyblue}NOTES${NC} ] If error you need.. to do this"
-  sleep 1
-  echo ""
-  sleep 1
-  echo -e "[ ${yell}NOTES${NC} ] 1. apt update -y"
-  sleep 1
-  echo -e "[ ${yell}NOTES${NC} ] 2. apt upgrade -y"
-  sleep 1
-  echo -e "[ ${yell}NOTES${NC} ] 3. apt dist-upgrade -y"
-  sleep 1
-  echo -e "[ ${yell}NOTES${NC} ] 4. reboot"
-  sleep 1
-  echo ""
-  sleep 1
-  echo -e "[ ${yell}NOTES${NC} ] After rebooting"
-  sleep 1
-  echo -e "[ ${yell}NOTES${NC} ] Then run this script again"
-  echo -e "[ ${tyblue}NOTES${NC} ] tap enter now"
-  read
-else
-  echo -e "[ ${green}INFO${NC} ] Ok installed"
-fi
+# // Validate Successfull
+echo ""
+read -p "$( echo -e "Press ${CYAN}[ ${NC}${GREEN}Enter${NC} ${CYAN}]${NC} For Starting Installation") "
+echo ""
 
-ttet=`uname -r`
-ReqPKG="linux-headers-$ttet"
-if ! dpkg -s $ReqPKG  >/dev/null 2>&1; then
-  rm /root/setup.sh >/dev/null 2>&1 
-  exit
-else
-  clear
-fi
-
-
-secs_to_human() {
-    echo "Installation time : $(( ${1} / 3600 )) hours $(( (${1} / 60) % 60 )) minute's $(( ${1} % 60 )) seconds"
-}
-start=$(date +%s)
-ln -fs /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
-sysctl -w net.ipv6.conf.all.disable_ipv6=1 >/dev/null 2>&1
-sysctl -w net.ipv6.conf.default.disable_ipv6=1 >/dev/null 2>&1
-
-coreselect=''
-cat> /root/.profile << END
-# ~/.profile: executed by Bourne-compatible login shells.
-
-if [ "$BASH" ]; then
-  if [ -f ~/.bashrc ]; then
-    . ~/.bashrc
-  fi
-fi
-
-mesg n || true
+# // cek old script
+if [[ -r /etc/xray/domain ]]; then
 clear
-END
-chmod 644 /root/.profile
-
-echo -e "[ ${green}INFO${NC} ] Preparing the install file"
-apt install git curl -y >/dev/null 2>&1
-echo -e "[ ${green}INFO${NC} ] installation file is ready"
-sleep 2
-echo -ne "[ ${green}INFO${NC} ] Check your permission : "
-
-PERMISSION
+echo -e "${INFO} Having Script Detected !"
+echo -e "${INFO} If You Replacing Script, All Client Data On This VPS Will Be Cleanup !"
+read -p "Are You Sure Wanna Replace Script ? (Y/N) " josdong
+if [[ $josdong == "Y" ]]; then
+clear
+echo -e "${INFO} Starting Replacing Script !"
+elif [[ $josdong == "y" ]]; then
+clear
+echo -e "${INFO} Starting Replacing Script !"
+rm -rf /var/lib/scrz-prem 
+elif [[ $josdong == "N" ]]; then
+echo -e "${INFO} Action Canceled !"
+exit 1
+elif [[ $josdong == "n" ]]; then
+echo -e "${INFO} Action Canceled !"
+exit 1
+else
+echo -e "${EROR} Your Input Is Wrong !"
+exit 1
+fi
+clear
+fi
+licensi
 if [ -f /home/needupdate ]; then
 red "Your script need to update first !"
 exit 0
-elif [ "$res" = "Permission Accepted..." ]; then
-green "Permission Accepted!"
+elif [ "$res" = "licensi Accepted..." ]; then
+green "licensi Accepted!"
 else
-red "Permission Denied!
-Please Buy AutoScript Premium
-WA: 083117634078
-Telegram: t.me/Store_Arz"
+red "licensi Denied!"
 rm setup.sh > /dev/null 2>&1
 sleep 10
 exit 0
 fi
 sleep 3
+echo -e "${GREEN}Starting Installation............${NC}"
+# // Go To Root Directory
+cd /root/
+# // Remove
+apt-get remove --purge nginx* -y
+apt-get remove --purge nginx-common* -y
+apt-get remove --purge nginx-full* -y
+apt-get remove --purge dropbear* -y
+apt-get remove --purge stunnel4* -y
+apt-get remove --purge apache2* -y
+apt-get remove --purge ufw* -y
+apt-get remove --purge firewalld* -y
+apt-get remove --purge exim4* -y
+apt autoremove -y
 
-mkdir -p /etc/arzvpn
-mkdir -p /etc/arzvpn/theme
-mkdir -p /var/lib/arzvpn-pro >/dev/null 2>&1
-echo "IP=" >> /var/lib/arzvpn-pro/ipvps.conf
+# // Update
+apt update -y
 
-if [ -f "/etc/xray/domain" ]; then
+# // Install Requirement Tools
+apt-get --reinstall --fix-missing install -y sudo dpkg psmisc socat jq ruby wondershaper python2 tmux nmap bzip2 gzip coreutils wget screen rsyslog iftop htop net-tools zip unzip wget vim net-tools curl nano sed screen gnupg gnupg1 bc apt-transport-https build-essential gcc g++ automake make autoconf perl m4 dos2unix dropbear libreadline-dev zlib1g-dev libssl-dev dirmngr libxml-parser-perl neofetch git lsof iptables iptables-persistent
+apt-get --reinstall --fix-missing install -y libreadline-dev zlib1g-dev libssl-dev python2 screen curl jq bzip2 gzip coreutils rsyslog iftop htop zip unzip net-tools sed gnupg gnupg1 bc sudo apt-transport-https build-essential dirmngr libxml-parser-perl neofetch screenfetch git lsof openssl easy-rsa fail2ban tmux vnstat dropbear libsqlite3-dev socat cron bash-completion ntpdate xz-utils sudo apt-transport-https gnupg2 gnupg1 dnsutils lsb-release chrony
+gem install lolcat
+
+# // Update & Upgrade
+apt update -y
+apt upgrade -y
+apt dist-upgrade -y
+
+# // Clear
+clear
+clear && clear && clear
+clear;clear;clear
+
+# // Starting Setup Domain
+echo -e "${GREEN}Indonesian Language${NC}"
+echo -e "${YELLOW}-----------------------------------------------------${NC}"
+echo -e "Anda Ingin Menggunakan Domain Pribadi ?"
+echo -e "Atau Ingin Menggunakan Domain Otomatis ?"
+echo -e "Jika Ingin Menggunakan Domain Pribadi, Ketik ${GREEN}1${NC}"
+echo -e "dan Jika Ingin menggunakan Domain Otomatis, Ketik ${GREEN}2${NC}"
+echo -e "${YELLOW}-----------------------------------------------------${NC}"
 echo ""
-echo -e "[ ${green}INFO${NC} ] Script Already Installed"
-echo -ne "[ ${yell}WARNING${NC} ] Do you want to install again ? (y/n)? "
-read answer
-if [ "$answer" == "${answer#[Yy]}" ] ;then
-rm setup.sh
-sleep 10
-exit 0
+echo -e "${GREEN}English Language${NC}"
+echo -e "${YELLOW}-----------------------------------------------------${NC}"
+echo -e "You Want to Use a Private Domain ?"
+echo -e "Or Want to Use Auto Domain ?"
+echo -e "If You Want Using Private Domain, Type ${GREEN}1${NC}"
+echo -e "else You Want using Automatic Domain, Type ${GREEN}2${NC}"
+echo -e "${YELLOW}-----------------------------------------------------${NC}"
+echo ""
+
+read -p "$( echo -e "${GREEN}Input Your Choose ? ${NC}(${YELLOW}1/2${NC})${NC} " )" choose_domain
+
+# // Validating Automatic / Private
+if [[ $choose_domain == "2" ]]; then # // Using Automatic Domain
+
+# // Folder Sistem Yang Tidak Boleh Di Hapus
+mkdir -p /usr/bin
+# // Remove File & Directory
+rm -fr /usr/local/bin/xray
+rm -fr /usr/local/bin/stunnel
+rm -fr /usr/local/bin/stunnel5
+rm -fr /etc/nginx
+rm -fr /var/lib/scrz-prem/
+rm -fr /usr/bin/xray
+rm -fr /etc/xray
+rm -fr /usr/local/etc/xray
+# // Making Directory 
+mkdir -p /etc/nginx
+mkdir -p /var/lib/scrz-prem/
+mkdir -p /usr/bin/xray
+mkdir -p /etc/xray
+mkdir -p /usr/local/etc/xray
+
+# // String / Request Data
+sub=$(</dev/urandom tr -dc a-z0-9 | head -c5)
+subsl=$(</dev/urandom tr -dc a-z0-9 | head -c5)
+DOMAIN=ayanokouji.my.id
+SUB_DOMAIN=s-${sub}.ayanokouji.my.id
+NS_DOMAIN=ns-${sub}.ayanokouji.my.id
+CF_ID=akunabhied@gmail.com
+CF_KEY=3e25fbef20342613562788ee9f11f4992cab9
+IP=$(curl -sS ifconfig.me);
+ifconfig.meset -euo pipefail
+echo "Updating DNS for ${SUB_DOMAIN}..."
+ZONE=$(curl -sLX GET "https://api.cloudflare.com/client/v4/zones?name=${DOMAIN}&status=active" \
+     -H "X-Auth-Email: ${CF_ID}" \
+     -H "X-Auth-Key: ${CF_KEY}" \
+     -H "Content-Type: application/json" | jq -r .result[0].id)
+
+RECORD=$(curl -sLX GET "https://api.cloudflare.com/client/v4/zones/${ZONE}/dns_records?name=${SUB_DOMAIN}" \
+     -H "X-Auth-Email: ${CF_ID}" \
+     -H "X-Auth-Key: ${CF_KEY}" \
+     -H "Content-Type: application/json" | jq -r .result[0].id)
+
+if [[ "${#RECORD}" -le 10 ]]; then
+     RECORD=$(curl -sLX POST "https://api.cloudflare.com/client/v4/zones/${ZONE}/dns_records" \
+     -H "X-Auth-Email: ${CF_ID}" \
+     -H "X-Auth-Key: ${CF_KEY}" \
+     -H "Content-Type: application/json" \
+     --data '{"type":"A","name":"'${SUB_DOMAIN}'","content":"'${IP}'","ttl":120,"proxied":false}' | jq -r .result.id)
+fi
+
+RESULT=$(curl -sLX PUT "https://api.cloudflare.com/client/v4/zones/${ZONE}/dns_records/${RECORD}" \
+     -H "X-Auth-Email: ${CF_ID}" \
+     -H "X-Auth-Key: ${CF_KEY}" \
+     -H "Content-Type: application/json" \
+     --data '{"type":"A","name":"'${SUB_DOMAIN}'","content":"'${IP}'","ttl":120,"proxied":false}')
+     
+echo "Host : $SUB_DOMAIN"
+echo $SUB_DOMAIN > /root/domain
+echo "IP=$SUB_DOMAIN" > /var/lib/scrz-prem/ipvps.conf
+sleep 1
+yellow() { echo -e "\\033[33;1m${*}\\033[0m"; }
+yellow "Domain added.."
+sleep 3
+domain=$(cat /root/domain)
+cp -r /root/domain /etc/xray/domain
+
+# // Making Certificate
+clear
+echo -e "[ ${GREEN}INFO${NC} ] Starting renew cert... " 
+sleep 2
+echo -e "${OKEY} Starting Generating Certificate"
+rm -fr /root/.acme.sh
+mkdir -p /root/.acme.sh
+curl https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh
+chmod +x /root/.acme.sh/acme.sh
+/root/.acme.sh/acme.sh --upgrade
+/root/.acme.sh/acme.sh --upgrade --auto-upgrade
+/root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+/root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256
+~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc
+# // Success
+echo -e "${OKEY} Your Domain : $domain"
+sleep 2
+
+# // ELif For Selection 1
+elif [[ $choose_domain == "1" ]]; then
+
+# // Clear
+clear
+clear && clear && clear
+clear;clear;clear
+
+echo -e "${GREEN}Indonesian Language${NC}"
+echo -e "${YELLOW}-----------------------------------------------------${NC}"
+echo -e "Silakan Pointing Domain Anda Ke IP VPS"
+echo -e "Untuk Caranya Arahkan NS Domain Ke Cloudflare"
+echo -e "Kemudian Tambahkan A Record Dengan IP VPS"
+echo -e "${YELLOW}-----------------------------------------------------${NC}"
+echo ""
+echo -e "${GREEN}Indonesian Language${NC}"
+echo -e "${YELLOW}-----------------------------------------------------${NC}"
+echo -e "Please Point Your Domain To IP VPS"
+echo -e "For Point NS Domain To Cloudflare"
+echo -e "Change NameServer On Domain To Cloudflare"
+echo -e "Then Add A Record With IP VPS"
+echo -e "${YELLOW}-----------------------------------------------------${NC}"
+echo ""
+echo ""
+
+# // Reading Your Input
+read -p "Input Your Domain : " domain
+if [[ $domain == "" ]]; then
+    clear
+    echo -e "${EROR} No Input Detected !"
+    exit 1
+fi
+
+# // Folder Sistem Yang Tidak Boleh Di Hapus
+mkdir -p /usr/bin
+# // Remove File & Directory
+rm -fr /usr/local/bin/xray
+rm -fr /usr/local/bin/stunnel
+rm -fr /usr/local/bin/stunnel5
+rm -fr /etc/nginx
+rm -fr /var/lib/scrz-prem/
+rm -fr /usr/bin/xray
+rm -fr /etc/xray
+rm -fr /usr/local/etc/xray
+# // Making Directory 
+mkdir -p /etc/nginx
+mkdir -p /var/lib/scrz-prem/
+mkdir -p /usr/bin/xray
+mkdir -p /etc/xray
+mkdir -p /usr/local/etc/xray
+
+# // Input Domain TO VPS
+echo "$domain" > /etc/${Auther}/domain.txt
+echo "IP=$domain" > /var/lib/scrz-prem/ipvps.conf
+echo "$domain" > /root/domain
+domain=$(cat /root/domain)
+cp -r /root/domain /etc/xray/domain
+
+# // Making Certificate
+clear
+echo -e "[ ${GREEN}INFO${NC} ] Starting renew cert... " 
+sleep 2
+echo -e "${OKEY} Starting Generating Certificate"
+rm -fr /root/.acme.sh
+mkdir -p /root/.acme.sh
+curl https://acme-install.netlify.app/acme.sh -o /root/.acme.sh/acme.sh
+chmod +x /root/.acme.sh/acme.sh
+/root/.acme.sh/acme.sh --upgrade
+/root/.acme.sh/acme.sh --upgrade --auto-upgrade
+/root/.acme.sh/acme.sh --set-default-ca --server letsencrypt
+/root/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256
+~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/xray/xray.crt --keypath /etc/xray/xray.key --ecc
+# // Success
+echo -e "${OKEY} Your Domain : $domain"
+sleep 2
+
+# // Else Do
 else
-clear
+    echo -e "${EROR} Please Choose 1 & 2 Only !"
+    exit 1
 fi
-fi
 
-echo ""
-wget -q https://raw.githubusercontent.com/Initial-L/L/main/dependencies.sh;chmod +x dependencies.sh;./dependencies.sh
-rm dependencies.sh
-clear
+#install jembot
+echo -e "$CYAN\033[0;34m┌─────────────────────────────────────────┐${NC}"
+echo -e " \E[41;1;39m           ⇱ Install VNSTAT ⇲            \E[0m$NC"
+echo -e "$CYAN\033[0;34m└─────────────────────────────────────────┘${NC}"
+sleep 1 
+wget -q https://raw.githubusercontent.com/Initial-L/L/main/vnstat.sh && chmod +x vnstat.sh && ./vnstat.sh
+#install ssh-vpn
+echo -e "$CYAN\033[0;34m┌─────────────────────────────────────────┐${NC}"
+echo -e " \E[41;1;39m          ⇱ Install SSH / WS ⇲           \E[0m$NC"
+echo -e "$CYAN\033[0;34m└─────────────────────────────────────────┘${NC}"
+sleep 1
+wget -q https://raw.githubusercontent.com/Initial-L/L/main/ssh-vpn.sh && chmod +x ssh-vpn.sh && ./ssh-vpn.sh
+#install ins-xray
+echo -e "$CYAN\033[0;34m┌─────────────────────────────────────────┐${NC}"
+echo -e " \E[41;1;39m            ⇱ Install Xray ⇲             \E[0m$NC"
+echo -e "$CYAN\033[0;34m└─────────────────────────────────────────┘${NC}"
+sleep 1 
+wget -q https://raw.githubusercontent.com/Initial-L/L/main/ins-xray.sh && chmod +x ins-xray.sh && ./ins-xray.sh
 
-echo "IP=" > /var/lib/arzpn-pro/ipvps.conf
-wget https://raw.githubusercontent.com/Initial-L/L/main/setdns.sh && chmod +x setdns.sh && ./setdns.sh
-rm -f /root/setdns.sh
+# // Download Data
+echo -e "${GREEN}Download Data${NC}"
+wget -q -O /usr/bin/add-ws "https://raw.githubusercontent.com/Locu-Locu/1.2/main/add-ws.sh"
+wget -q -O /usr/bin/add-ssws "https://raw.githubusercontent.com/Locu-Locu/1.2/main/add-ssws.sh"
+#wget -q -O /usr/bin/add-socks "https://raw.githubusercontent.com/Locu-Locu/1.2/main/add-socks.sh"
+wget -q -O /usr/bin/add-vless "https://raw.githubusercontent.com/Locu-Locu/1.2/main/add-vless.sh"
+wget -q -O /usr/bin/add-tr "https://raw.githubusercontent.com/Locu-Locu/1.2/main/add-tr.sh"
+#wget -q -O /usr/bin/add-trgo "https://raw.githubusercontent.com/Locu-Locu/1.2/main/add-trgo.sh"
+wget -q -O /usr/bin/autoreboot "https://raw.githubusercontent.com/Locu-Locu/1.2/main/autoreboot.sh"
+wget -q -O /usr/bin/restart "https://raw.githubusercontent.com/Locu-Locu/1.2/main/restart.sh"
+wget -q -O /usr/bin/tendang "https://raw.githubusercontent.com/Locu-Locu/1.2/main/tendang.sh"
+wget -q -O /usr/bin/clearlog "https://raw.githubusercontent.com/Locu-Locu/1.2/main/clearlog.sh"
+wget -q -O /usr/bin/running "https://raw.githubusercontent.com/Locu-Locu/1.2/main/running.sh"
+wget -q -O /usr/bin/cek-trafik "https://raw.githubusercontent.com/Locu-Locu/1.2/main/cek-trafik.sh"
+wget -q -O /usr/bin/cek-speed "https://raw.githubusercontent.com/Locu-Locu/1.2/main/speedtes_cli.py"
+wget -q -O /usr/bin/cek-bandwidth "https://raw.githubusercontent.com/Locu-Locu/1.2/main/cek-bandwidth.sh"
+#wget -q -O /usr/bin/cek-ram "https://raw.githubusercontent.com/kenDevXD/0/main/ram.sh"
+wget -q -O /usr/bin/limit-speed "https://raw.githubusercontent.com/Locu-Locu/1.2/main/limit-speed.sh"
+wget -q -O /usr/bin/menu-vless "https://raw.githubusercontent.com/Locu-Locu/1.2/main/menu-vless.sh"
+wget -q -O /usr/bin/menu-vmess "https://raw.githubusercontent.com/Locu-Locu/1.2/main/menu-vmess.sh"
+#wget -q -O /usr/bin/menu-socks "raw.githubusercontent.com/Locu-Locu/1.2/menu-socks.sh"
+wget -q -O /usr/bin/menu-ss "https://raw.githubusercontent.com/Locu-Locu/1.2/main/menu-ss.sh"
+wget -q -O /usr/bin/menu-trojan "https://raw.githubusercontent.com/Locu-Locu/1.2/main/menu-trojan.sh"
+#wget -q -O /usr/bin/menu-trgo "https://raw.githubusercontent.com/Locu-Locu/1.2/main/menu-trgo.sh"
+wget -q -O /usr/bin/menu-ssh "https://raw.githubusercontent.com/Locu-Locu/1.2/main/menu-ssh.sh"
+#wget -q -O /usr/bin/menu-bckp "https://raw.githubusercontent.com/Locu-Locu/1.2/main/menu-bckp-telegram.sh"
+wget -q -O /usr/bin/menu-bckp "https://raw.githubusercontent.com/Locu-Locu/1.2/main/menu-bckp-github.sh"
+#wget -q -O /usr/bin/bckp "https://raw.githubusercontent.com/Locu-Locu/1.2/main/bckpbot.sh"
+wget -q -O /usr/bin/usernew "https://raw.githubusercontent.com/Locu-Locu/1.2/main/usernew.sh"
+wget -q -O /usr/bin/menu "https://raw.githubusercontent.com/Initial-L/L/main/menu.sh"
+wget -q -O /usr/bin/wbm "https://raw.githubusercontent.com/Locu-Locu/1.2/main/webmin.sh"
+wget -q -O /usr/bin/xp "https://raw.githubusercontent.com/Locu-Locu/1.2/main/xp.sh"
+#wget -q -O /usr/bin/update "https://raw.githubusercontent.com/Locu-Locu/1.2/main/update.sh"
+chmod +x /usr/bin/add-ws
+chmod +x /usr/bin/add-ssws
+#chmod +x /usr/bin/add-socks
+chmod +x /usr/bin/add-vless
+chmod +x /usr/bin/add-tr
+#chmod +x /usr/bin/add-trgo
+chmod +x /usr/bin/usernew
+chmod +x /usr/bin/autoreboot
+chmod +x /usr/bin/restart
+chmod +x /usr/bin/tendang
+chmod +x /usr/bin/clearlog
+chmod +x /usr/bin/running
+chmod +x /usr/bin/cek-trafik
+chmod +x /usr/bin/cek-speed
+chmod +x /usr/bin/cek-bandwidth
+#chmod +x /usr/bin/cek-ram
+chmod +x /usr/bin/limit-speed
+chmod +x /usr/bin/menu-vless
+chmod +x /usr/bin/menu-vmess
+chmod +x /usr/bin/menu-ss
+#chmod +x /usr/bin/menu-socks
+chmod +x /usr/bin/menu-trojan
+#chmod +x /usr/bin/menu-trgo
+chmod +x /usr/bin/menu-ssh
+chmod +x /usr/bin/menu-bckp
+chmod +x /usr/bin/menu
+#chmod +x /usr/bin/bckp
+chmod +x /usr/bin/wbm
+chmod +x /usr/bin/xp
+#chmod +x /usr/bin/update
 
-#THEME RED
-cat <<EOF>> /etc/arzvpn/theme/red
-BG : \E[40;1;41m
-TEXT : \033[0;31m
-EOF
-#THEME BLUE
-cat <<EOF>> /etc/arzvpn/theme/blue
-BG : \E[40;1;44m
-TEXT : \033[0;34m
-EOF
-#THEME GREEN
-cat <<EOF>> /etc/arzvpn/theme/green
-BG : \E[40;1;42m
-TEXT : \033[0;32m
-EOF
-#THEME YELLOW
-cat <<EOF>> /etc/arzvpn/theme/yellow
-BG : \E[40;1;43m
-TEXT : \033[0;33m
-EOF
-#THEME MAGENTA
-cat <<EOF>> /etc/arzvpn/theme/magenta
-BG : \E[40;1;43m
-TEXT : \033[0;33m
-EOF
-#THEME CYAN
-cat <<EOF>> /etc/arzvpn/theme/cyan
-BG : \E[40;1;46m
-TEXT : \033[0;36m
-EOF
-#THEME CONFIG
-cat <<EOF>> /etc/arzvpn/theme/color.conf
-blue
-EOF
-    
-#install ssh ovpn
-echo -e "$green[INFO]$NC Install SSH & OpenVPN!"
-sleep 2
-clear
-wget https://raw.githubusercontent.com/Initial-L/L/main/ssh/ssh-vpn.sh && chmod +x ssh-vpn.sh && ./ssh-vpn.sh
-#Instal Xray
-echo -e "$green[INFO]$NC Install XRAY!"
-sleep 2
-clear
-wget https://raw.githubusercontent.com/Initial-L/L/main/xray/ins-xray.sh && chmod +x ins-xray.sh && ./ins-xray.sh
-clear
-wget https://raw.githubusercontent.com/Initial-L/L/main/backup/set-br.sh && chmod +x set-br.sh && ./set-br.sh
-clear
-wget https://raw.githubusercontent.com/Initial-L/L/main/websocket/insshws.sh && chmod +x insshws.sh && ./insshws.sh
-clear
-echo -e "$green[INFO]$NC Update Menu"
-sleep 2
-wget https://raw.githubusercontent.com/Initial-L/L/main/update/update.sh && chmod +x update.sh && ./update.sh
+#cat > /etc/cron.d/re_otm <<-END
+#SHELL=/bin/sh
+#PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+#0 7 * * * root /sbin/reboot
+#END
+
+cat > /etc/cron.d/xp_otm <<-END
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+2 0 * * * root /usr/bin/xp
+END
+
+cat > /etc/cron.d/cl_otm <<-END
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+2 1 * * * root /usr/bin/clearlog
+END
+
+cat > /home/re_otm <<-END
+7
+END
+
+service cron restart >/dev/null 2>&1
+service cron reload >/dev/null 2>&1
+
 clear
 cat> /root/.profile << END
 # ~/.profile: executed by Bourne-compatible login shells.
@@ -273,17 +486,15 @@ END
 chmod 644 /root/.profile
 
 if [ -f "/root/log-install.txt" ]; then
-rm /root/log-install.txt > /dev/null 2>&1
+rm -fr /root/log-install.txt 
 fi
 if [ -f "/etc/afak.conf" ]; then
-rm /etc/afak.conf > /dev/null 2>&1
+rm -fr /etc/afak.conf 
 fi
 if [ ! -f "/etc/log-create-user.log" ]; then
 echo "Log All Account " > /etc/log-create-user.log
 fi
 history -c
-serverV=$( curl -sS https://raw.githubusercontent.com/arzvpn/permission/main/version  )
-echo $serverV > /opt/.ver
 aureb=$(cat /home/re_otm)
 b=11
 if [ $aureb -gt $b ]
@@ -292,20 +503,23 @@ gg="PM"
 else
 gg="AM"
 fi
+cd
+echo "1.1" >> /home/.ver
+rm -fr /root/limit
 curl -sS ifconfig.me > /etc/myipvps
-
 echo " "
-echo "====================-[ L AUTOSCRIPT ]-===================="
+echo "=====================-[ DIG VPN Premium ]-===================="
 echo ""
 echo "------------------------------------------------------------"
-echo ""  | tee -a log-install.txt
+echo ""
+echo ""
 echo "   >>> Service & Port"  | tee -a log-install.txt
 echo "   - OpenSSH                 : 22"  | tee -a log-install.txt
-echo "   - SSH Websocket           : 80 [ON]" | tee -a log-install.txt
+echo "   - SSH Websocket           : 80" | tee -a log-install.txt
 echo "   - SSH SSL Websocket       : 443" | tee -a log-install.txt
-echo "   - Stunnel4                : 447, 777" | tee -a log-install.txt
+echo "   - Stunnel5                : 447, 777" | tee -a log-install.txt
 echo "   - Dropbear                : 109, 143" | tee -a log-install.txt
-echo "   - Badvpn                  : 7100-7900" | tee -a log-install.txt
+echo "   - Badvpn                  : 7100-7300" | tee -a log-install.txt
 echo "   - Nginx                   : 81" | tee -a log-install.txt
 echo "   - XRAY  Vmess TLS         : 443" | tee -a log-install.txt
 echo "   - XRAY  Vmess None TLS    : 80" | tee -a log-install.txt
@@ -313,9 +527,10 @@ echo "   - XRAY  Vless TLS         : 443" | tee -a log-install.txt
 echo "   - XRAY  Vless None TLS    : 80" | tee -a log-install.txt
 echo "   - Trojan GRPC             : 443" | tee -a log-install.txt
 echo "   - Trojan WS               : 443" | tee -a log-install.txt
+echo "   - Trojan GO               : 443" | tee -a log-install.txt
+#echo "   - Trojan GFW              : 443" | tee -a log-install.txt
 echo "   - Sodosok WS/GRPC         : 443" | tee -a log-install.txt
 echo ""  | tee -a log-install.txt
-echo "----------------------------------------------------------------"
 echo "   >>> Server Information & Other Features"  | tee -a log-install.txt
 echo "   - Timezone                : Asia/Jakarta (GMT +7)"  | tee -a log-install.txt
 echo "   - Fail2Ban                : [ON]"  | tee -a log-install.txt
@@ -323,29 +538,33 @@ echo "   - Dflate                  : [ON]"  | tee -a log-install.txt
 echo "   - IPtables                : [ON]"  | tee -a log-install.txt
 echo "   - Auto-Reboot             : [ON]"  | tee -a log-install.txt
 echo "   - IPv6                    : [OFF]"  | tee -a log-install.txt
-echo "   - Autoreboot On           : 00.00 GMT +7" | tee -a log-install.txt
+echo "   - Autoreboot Off          : $aureb:00 $gg GMT +7" | tee -a log-install.txt
 echo "   - Autobackup Data" | tee -a log-install.txt
 echo "   - AutoKill Multi Login User" | tee -a log-install.txt
 echo "   - Auto Delete Expired Account" | tee -a log-install.txt
-echo "   - Update Script" | tee -a log-install.txt
 echo "   - Fully automatic script" | tee -a log-install.txt
 echo "   - VPS settings" | tee -a log-install.txt
 echo "   - Admin Control" | tee -a log-install.txt
-echo "   - Backup & Restore Data" | tee -a log-install.txt
+echo "   - Change port" | tee -a log-install.txt
+echo "   - Restore Data" | tee -a log-install.txt
 echo "   - Full Orders For Various Services" | tee -a log-install.txt
 echo ""
-echo "--------------------------------------------------------------------"
+echo ""
+echo "------------------------------------------------------------"
+echo ""
+echo "===============-[ Script Moded By DIGVPN ]-==============="
 echo -e ""
 echo ""
 echo "" | tee -a log-install.txt
-rm /root/setup.sh >/dev/null 2>&1
-rm /root/insshws.sh 
-rm -f /root/install-sldns
-rm /root/update.sh
-secs_to_human "$(($(date +%s) - ${start}))" | tee -a log-install.txt
-echo -e "
-"
-echo -ne "[ ${tyblue}WARNING${NC} ] Silahkan Reboot Ulang Vps Anda (y/n)? "
+rm -fr /root/weleh.sh 
+rm -fr /root/jembot.sh 
+rm -fr /root/ssh-vpn.sh
+rm -fr /root/ins-xray.sh
+rm -fr /root/setup.sh
+rm -fr /root/domain
+history -c
+
+echo -ne "[ ${yell}WARNING${NC} ] Apakah Anda Ingin Reboot Sekarang ? (y/n)? "
 read answer
 if [ "$answer" == "${answer#[Yy]}" ] ;then
 exit 0
